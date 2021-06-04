@@ -492,6 +492,7 @@ class Loader2(BasicDataset):
                     testItem.append(items)
                     #m_item = max(m_item, items)
                     #self.n_user = max(self.n_user, uid)
+                    #print()
                     self.testDataSize += 1
 
                        
@@ -632,7 +633,7 @@ class Loader2(BasicDataset):
         for user in users:
             posItems.append(self.UserItemNet[user].nonzero()[1])
 
-        
+
         return posItems
 
     # def getUserNegItems(self, users):
