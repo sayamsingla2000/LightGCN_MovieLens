@@ -1,6 +1,8 @@
 
 #### Update
 
+A new class is made called Loader2() for movielens100k dataset 
+
 2020-09:
 * Change the print format of each epoch
 * Add Cpp Extension in  `code/sources/`  for negative sampling. To use the extension, please install `pybind11` and `cppimport` under your environment
