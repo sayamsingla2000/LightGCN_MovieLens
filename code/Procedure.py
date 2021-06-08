@@ -59,8 +59,13 @@ def BPR_train_original(dataset, recommend_model, loss_class, epoch, neg_k=1, w=N
     
 def test_one_batch(X):
     sorted_items = X[0].numpy()
+    # print(sorted_items)
     groundTrue = X[1]
+    # print(groundTrue)
+    # print(" --- ")
+    # print(sorted_items)
     r = utils.getLabel(groundTrue, sorted_items)
+
     pre, recall, ndcg = [], [], []
     for k in world.topks:
         ret = utils.RecallPrecision_ATk(groundTrue, r, k)
@@ -104,6 +109,7 @@ def Test(dataset, Recmodel, epoch, w=None, multicore=0):
             batch_users_gpu = batch_users_gpu.to(world.device)
 
             rating = Recmodel.getUsersRating(batch_users_gpu)
+
             #rating = rating.cpu()
             exclude_index = []
             exclude_items = []
@@ -113,6 +119,7 @@ def Test(dataset, Recmodel, epoch, w=None, multicore=0):
             rating[exclude_index, exclude_items] = -(1<<10)
             _, rating_K = torch.topk(rating, k=max_K)
             rating = rating.cpu().numpy()
+
             # aucs = [ 
             #         utils.AUC(rating[i],
             #                   dataset, 
@@ -123,6 +130,7 @@ def Test(dataset, Recmodel, epoch, w=None, multicore=0):
             users_list.append(batch_users)
             rating_list.append(rating_K.cpu())
             groundTrue_list.append(groundTrue)
+
         assert total_batch == len(users_list)
         X = zip(rating_list, groundTrue_list)
         if multicore == 1:

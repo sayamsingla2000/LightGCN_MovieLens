@@ -219,9 +219,14 @@ def RecallPrecision_ATk(test_data, r, k):
     """
     right_pred = r[:, :k].sum(1)
     precis_n = k
+    # print(",---,")
+    # print(np.sum(right_pred))
+
     recall_n = np.array([len(test_data[i]) for i in range(len(test_data))])
     recall = np.sum(right_pred/recall_n)
     precis = np.sum(right_pred)/precis_n
+    # print(recall_n)
+    # print(recall)
     return {'recall': recall, 'precision': precis}
 
 
@@ -272,9 +277,12 @@ def getLabel(test_data, pred_data):
     for i in range(len(test_data)):
         groundTrue = test_data[i]
         predictTopK = pred_data[i]
+        #print(predictTopK,groundTrue)
         pred = list(map(lambda x: x in groundTrue, predictTopK))
         pred = np.array(pred).astype("float")
+        
         r.append(pred)
+
     return np.array(r).astype('float')
 
 # ====================end Metrics=============================

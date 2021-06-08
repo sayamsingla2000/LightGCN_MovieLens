@@ -423,6 +423,7 @@ class Loader2(BasicDataset):
         self.m_item = 0
         train_file = path + '/train.txt'
         test_file = path + '/test.txt'
+        map_file = path + '/map.txt'
         self.path = path
         trainUniqueUsers, trainItem, trainUser , trainRating= [], [], [], []
         testUniqueUsers, testItem, testUser, testRating = [], [], [] , []
@@ -430,19 +431,26 @@ class Loader2(BasicDataset):
         self.testDataSize = 0
         self.ref= 0
         self.ref2 = 0
+        map = [0]*193610
+        a = 1
+
+        with open(map_file) as f:
+    
+            for l in f.readlines():
+                
+                if len(l) > 0:
+                    l = l.strip('\n').split(' ')
+                    #items = [int(i) for i in l[1]]
+                    map_items = int(l[1])
+                    
+                    if map[map_items] == 0:
+                        map[map_items] = a
+                        a+=1
 
         with open(train_file) as f:
             for l in f.readlines():
                 if len(l) > 0:
-                    # l = l.strip('\n').split(' ')
-                    # items = [int(i) for i in l[1:]]
-                    # uid = int(l[0])
-                    # trainUniqueUsers.append(uid)
-                    # trainUser.extend([uid] * len(items))
-                    # trainItem.extend(items)
-                    # self.m_item = max(self.m_item, max(items))
-                    # self.n_user = max(self.n_user, uid)
-                    # self.traindataSize += len(items)
+                    
 
                     l = l.strip('\n').split(' ')
                     #items = [int(i) for i in l[1]]
@@ -458,7 +466,7 @@ class Loader2(BasicDataset):
                     #trainUser.extend([uid] * len(items))
                     trainUser.append(uid)
                     #trainItem.extend(items)
-                    trainItem.append(items)
+                    trainItem.append(map[items])
                     #m_item = max(m_item, items)
 
                     self.n_user = max(self.n_user, uid)
@@ -473,10 +481,10 @@ class Loader2(BasicDataset):
         with open(test_file) as f:
             for l in f.readlines():
                 if len(l) > 0:
-                   
+
 
                     l = l.strip('\n').split(' ')
-                    #items = [int(i) for i in l[1]]
+                    
                     items = int(l[1])
                     rating = float(str(l[2])) 
                     uid = int(l[0])
@@ -486,17 +494,16 @@ class Loader2(BasicDataset):
                         self.ref2 = uid
                     
                     testRating.append(rating)
-                    
                     testUser.append(uid)
-                
-                    testItem.append(items)
-                    #m_item = max(m_item, items)
-                    #self.n_user = max(self.n_user, uid)
-                    #print()
+                    testItem.append(map[items])
+                    
                     self.testDataSize += 1
 
                        
-        self.m_item = max(trainItem)   
+        self.m_item = max(trainItem) 
+        print("  --  ")
+        print(max(trainItem))
+
         self.m_item += 1
         self.n_user += 1
         self.testUniqueUsers = np.array(testUniqueUsers)
@@ -571,6 +578,7 @@ class Loader2(BasicDataset):
             except :
                 print("generating adjacency matrix")
                 s = time()
+                print(self.n_users,self.m_items)
                 adj_mat = sp.dok_matrix((self.n_users + self.m_items, self.n_users + self.m_items), dtype=np.float32)
                 adj_mat = adj_mat.tolil()
                 R = self.UserItemNet.tolil()

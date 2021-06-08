@@ -114,6 +114,7 @@ class LightGCN(BasicModel):
             print('use pretarined data')
         self.f = nn.Sigmoid()
         self.Graph = self.dataset.getSparseGraph()
+      
         print(f"lgn is already to go(dropout:{self.config['dropout']})")
 
         # print("save_txt")
@@ -163,6 +164,7 @@ class LightGCN(BasicModel):
                 side_emb = torch.cat(temp_emb, dim=0)
                 all_emb = side_emb
             else:
+                # print(len(g_droped), len(all_emb))
                 all_emb = torch.sparse.mm(g_droped, all_emb)
             embs.append(all_emb)
         embs = torch.stack(embs, dim=1)
