@@ -1,8 +1,8 @@
 
 #### Update
 
-A new class is made called Loader2() for movielens100k dataset 
-Since for moviesLens it has 610 users_id and about 9k distinct movie_id ranging from 0 to 190k and rating from 0 to 5. The data is preprocessed to make train.txt and test.txt and converted to user_id and movie_id interaction matrix. As the highest movie_id is 190K so it will make graph with 190K column so i have mapped the movie_id to reduce the final dimension from (610 x 190k) to (610 x 9k).  
+*   A new class is made called Loader2() for movielens100k dataset 
+*   Since for moviesLens it has 610 users_id and about 9k distinct movie_id ranging from 0 to 190k and rating from 0 to 5. The data is preprocessed to make train.txt and test.txt and converted to user_id and movie_id interaction matrix. As the highest movie_id is 190K so it will make graph with 190K column so i have mapped the movie_id to reduce the final dimension from (610 x 190k) to (610 x 9k).  
 
 2020-09:
 * Change the print format of each epoch
