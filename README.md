@@ -11,7 +11,7 @@
 * use this command 
   ` cd code && python main.py --decay=1e-4 --lr=0.001 --layer=3 --seed=2020 --dataset="gowalla" --topks="[20]" --recdim=64`
   and change name of dataset accordingly under quotes 
-* if you are retraining the model for ml100k dataset make sure to delete "s_pre_adj_mat.npz" file as it stores the matrix data in ml100k folder when using gowalla type loader class.
+* if you are retraining the model for ml100k dataset make sure to delete "s_pre_adj_mat.npz" file in ml100k folder as it stores the matrix data when using gowalla type loader class.
 
 
 2020-09:
