@@ -61,9 +61,9 @@ def test_one_batch(X):
     sorted_items = X[0].numpy()
     # print(sorted_items)
     groundTrue = X[1]
-    # print(groundTrue)
-    # print(" --- ")
-    # print(sorted_items)
+    print(groundTrue)
+    print(" --- ")
+    print(sorted_items)
     r = utils.getLabel(groundTrue, sorted_items)
 
     pre, recall, ndcg = [], [], []

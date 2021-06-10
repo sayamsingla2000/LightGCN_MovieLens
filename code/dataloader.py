@@ -94,6 +94,7 @@ class LastFM(BasicDataset):
         self.testData  = testData
         self.trainUser = np.array(trainData[:][0])
         self.trainUniqueUsers = np.unique(self.trainUser)
+        print(self.trainUser)
         self.trainItem = np.array(trainData[:][1])
         # self.trainDataSize = len(self.trainUser)
         self.testUser  = np.array(testData[:][0])
@@ -103,7 +104,7 @@ class LastFM(BasicDataset):
         print(f"LastFm Sparsity : {(len(self.trainUser) + len(self.testUser))/self.n_users/self.m_items}")
         
         # (users,users)
-        self.socialNet    = csr_matrix((np.ones(len(trustNet)), (trustNet[:,0], trustNet[:,1]) ), shape=(self.n_users,self.n_users))
+        # self.socialNet    = csr_matrix((np.ones(len(trustNet)), (trustNet[:,0], trustNet[:,1]) ), shape=(self.n_users,self.n_users))
         # (users,items), bipartite graph
         self.UserItemNet  = csr_matrix((np.ones(len(self.trainUser)), (self.trainUser, self.trainItem) ), shape=(self.n_users,self.m_items)) 
         
@@ -407,12 +408,12 @@ class Loader(BasicDataset):
 
 class Loader2(BasicDataset):
     """
-    Dataset type for pytorch \n
+    Dataset type for pytorch 
     Incldue graph information
     ml100k dataset
     """
 
-    def __init__(self,config = world.config,path="../data/gowalla"):
+    def __init__(self,config = world.config,path="../data/ml100k"):
         # train or test
         cprint(f'loading [{path}]')
         self.split = config['A_split']
@@ -472,7 +473,7 @@ class Loader2(BasicDataset):
                     self.n_user = max(self.n_user, uid)
                     self.traindataSize += 1
 
-
+        print(trainUniqueUsers)
         self.trainUniqueUsers = np.array(trainUniqueUsers)
         self.trainUser = np.array(trainUser)
         self.trainItem = np.array(trainItem)
@@ -649,3 +650,233 @@ class Loader2(BasicDataset):
     #     for user in users:
     #         negItems.append(self.allNeg[user])
     #     return negItems
+
+
+
+
+
+class ml100k(BasicDataset):
+    """
+    Dataset type for pytorch \n
+    Incldue graph information
+    LastFM dataset
+    """
+    def __init__(self, path="../data/ml100k"):
+        # train or test
+        cprint("loading [last fm]")
+        self.mode_dict = {'train':0, "test":1}
+        self.mode    = self.mode_dict['train']
+        # self.n_users = 1892
+        # self.m_items = 4489
+        # trainData = pd.read_table(join(path, 'data1.txt'), header=None)
+        # print(trainData.head())
+        # testData  = pd.read_table(join(path, 'test1.txt'), header=None)
+        # print(testData.head())
+        # trustNet  = pd.read_table(join(path, 'trustnetwork.txt'), header=None).to_numpy()
+        # print(trustNet[:5])
+        # trustNet -= 1
+        # trainData-= 1
+        # testData -= 1
+        train_file = path + '/train.txt'
+        test_file = path + '/test.txt'
+        map_file = path + '/map.txt'
+        self.path = path
+        trainUniqueUsers, trainItem, trainUser , trainRating= [], [], [], []
+        testUniqueUsers, testItem, testUser, testRating = [], [], [] , []
+        self.m_item = 0
+        map = [0]*193610
+        a = 1
+        self.ref= 0
+        self.ref2 = 0
+
+        with open(map_file) as f:
+    
+            for l in f.readlines():
+                
+                if len(l) > 0:
+                    l = l.strip('\n').split(' ')
+                    #items = [int(i) for i in l[1]]
+                    map_items = int(l[1])
+                    
+                    if map[map_items] == 0:
+                        map[map_items] = a
+                        a+=1
+
+        with open(train_file) as f:
+            for l in f.readlines():
+                if len(l) > 0:
+                    
+
+                    l = l.strip('\n').split(' ')
+                    #items = [int(i) for i in l[1]]
+                    items = int(l[1])
+                    rating = float(str(l[2])) 
+                    uid = int(l[0])
+                    
+                    if uid > self.ref:
+                        trainUniqueUsers.append(uid)
+                        self.ref = uid
+                    
+                    trainRating.append(rating)
+                    #trainUser.extend([uid] * len(items))
+                    trainUser.append(uid)
+                    #trainItem.extend(items)
+                    trainItem.append(map[items])
+                    #m_item = max(m_item, items)
+
+                    
+                    
+
+
+
+
+
+        self.trainUniqueUsers = np.array(trainUniqueUsers)
+        self.trainUser = np.array(trainUser)
+        self.trainItem = np.array(trainItem)
+        self.trainRating = np.array(trainRating)
+        # self.trainDataSize = len(self.trainUser)
+
+        with open(test_file) as f:
+            for l in f.readlines():
+                if len(l) > 0:
+
+
+                    l = l.strip('\n').split(' ')
+                    
+                    items = int(l[1])
+                    rating = float(str(l[2])) 
+                    uid = int(l[0])
+                    
+                    if uid > self.ref2:
+                        testUniqueUsers.append(uid)
+                        self.ref2 = uid
+                    
+                    testRating.append(rating)
+                    testUser.append(uid)
+                    testItem.append(map[items])
+                    
+                    
+        self.m_item = max(trainItem) 
+        self.testUniqueUsers = np.array(testUniqueUsers)
+        self.testUser = np.array(testUser)
+        self.testItem = np.array(testItem)
+        self.testRating = np.array(testRating)
+        self.m_item += 1
+
+
+
+        self.Graph = None
+        print(f"LastFm Sparsity : {(len(self.trainUser) + len(self.testUser))/self.n_users/self.m_items}")
+        
+        # (users,users)
+        # self.socialNet    = csr_matrix((np.ones(len(trustNet)), (trustNet[:,0], trustNet[:,1]) ), shape=(self.n_users,self.n_users))
+        # (users,items), bipartite graph
+        self.UserItemNet  = csr_matrix((self.trainRating, (self.trainUser, self.trainItem) ), shape=(self.n_users+1,self.m_items)) 
+        
+        # pre-calculate
+        self._allPos = self.getUserPosItems(list(range(self.n_users)))
+        self.allNeg = []
+        allItems    = set(range(self.m_items))
+        for i in range(self.n_users):
+            pos = set(self._allPos[i])
+            neg = allItems - pos
+            self.allNeg.append(np.array(list(neg)))
+        self.__testDict = self.__build_test()
+
+    @property
+    def n_users(self):
+        return 611 
+    
+    @property
+    def m_items(self):
+        return self.m_item 
+    
+    @property
+    def trainDataSize(self):
+        return len(self.trainUser)
+    
+    @property
+    def testDict(self):
+        return self.__testDict
+
+    @property
+    def allPos(self):
+        return self._allPos
+
+    def getSparseGraph(self):
+        if self.Graph is None:
+            user_dim = torch.LongTensor(self.trainUser)
+            item_dim = torch.LongTensor(self.trainItem)
+            
+            first_sub = torch.stack([user_dim, item_dim + self.n_users])
+            second_sub = torch.stack([item_dim+self.n_users, user_dim])
+            index = torch.cat([first_sub, second_sub], dim=1)
+            data = torch.ones(index.size(-1)).int()
+            self.Graph = torch.sparse.IntTensor(index, data, torch.Size([self.n_users+self.m_items, self.n_users+self.m_items]))
+            dense = self.Graph.to_dense()
+            D = torch.sum(dense, dim=1).float()
+            D[D==0.] = 1.
+            D_sqrt = torch.sqrt(D).unsqueeze(dim=0)
+            dense = dense/D_sqrt
+            dense = dense/D_sqrt.t()
+            index = dense.nonzero()
+            data  = dense[dense >= 1e-9]
+            assert len(index) == len(data)
+            self.Graph = torch.sparse.FloatTensor(index.t(), data, torch.Size([self.n_users+self.m_items, self.n_users+self.m_items]))
+            self.Graph = self.Graph.coalesce().to(world.device)
+        return self.Graph
+
+    def __build_test(self):
+        """
+        return:
+            dict: {user: [items]}
+        """
+        test_data = {}
+        for i, item in enumerate(self.testItem):
+            user = self.testUser[i]
+            if test_data.get(user):
+                test_data[user].append(item)
+            else:
+                test_data[user] = [item]
+        return test_data
+    
+    def getUserItemFeedback(self, users, items):
+        """
+        users:
+            shape [-1]
+        items:
+            shape [-1]
+        return:
+            feedback [-1]
+        """
+        # print(self.UserItemNet[users, items])
+        return np.array(self.UserItemNet[users, items]).astype('uint8').reshape((-1, ))
+    
+    def getUserPosItems(self, users):
+        posItems = []
+        for user in users:
+            posItems.append(self.UserItemNet[user].nonzero()[1])
+        return posItems
+    
+    def getUserNegItems(self, users):
+        negItems = []
+        for user in users:
+            negItems.append(self.allNeg[user])
+        return negItems
+            
+    
+    
+    def __getitem__(self, index):
+        user = self.trainUniqueUsers[index]
+        # return user_id and the positive items of the user
+        return user
+    
+    def switch2test(self):
+        """
+        change dataset mode to offer test data to dataloader
+        """
+        self.mode = self.mode_dict['test']
+    
+    def __len__(self):
+        return len(self.trainUniqueUsers)

@@ -9,7 +9,8 @@ if world.dataset in ['gowalla', 'yelp2018', 'amazon-book']:
 elif world.dataset == 'lastfm':
     dataset = dataloader.LastFM()
 elif world.dataset == 'ml100k':
-    dataset = dataloader.Loader2(path="../data/"+world.dataset)
+    # dataset = dataloader.Loader2(path="../data/"+world.dataset)
+    dataset = dataloader.ml100k()
 
 print('===========config================')
 pprint(world.config)
