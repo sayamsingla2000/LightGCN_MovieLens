@@ -13,6 +13,10 @@
   and change name of dataset accordingly under quotes 
 * if you are retraining the model for ml100k dataset make sure to delete "s_pre_adj_mat.npz" file in ml100k folder as it stores the matrix data when using gowalla type loader class.
 
+#### Dataset 
+MovieLens - https://grouplens.org/datasets/movielens/ 
+MindReader - https://mindreader.tech/dataset/
+
 
 2020-09:
 * Change the print format of each epoch
