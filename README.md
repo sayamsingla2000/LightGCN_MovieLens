@@ -4,6 +4,20 @@
 *   A new class is made called Loader2() for movielens100k dataset 
 *   Since for moviesLens it has 610 users_id and about 9k distinct movie_id ranging from 0 to 190k and rating from 0 to 5. The data is preprocessed to make train.txt and test.txt and converted to user_id and movie_id interaction matrix. As the highest movie_id is 190K so it will make graph with 190K column so i have mapped the movie_id to reduce the final dimension from (610 x 190k) to (610 x 9k).  
 
+#### Things to remember 
+* while using gowalla dataset make sure to increase batchsize to 100 in parse.py otherwise it will take long time to run 
+* while using ml100k dataset in gowalla type loader class that is loader2 make sure to register it in register.py (already commented) 
+* while using ml100k in lastfm type class that ml100k() , again register in register.py 
+* use this command 
+  ` cd code && python main.py --decay=1e-5 --lr=0.0001 --layer=4 --seed=2020 --dataset="ml100k" --topks="[50]" --recdim=32`
+  and change name of dataset accordingly under quotes 
+* if you are retraining the model for ml100k dataset make sure to delete "s_pre_adj_mat.npz" file in ml100k folder as it stores the matrix data when using gowalla type loader class.
+
+#### Dataset 
+* MovieLens - https://grouplens.org/datasets/movielens/ 
+* MindReader - https://mindreader.tech/dataset/
+
+
 2020-09:
 * Change the print format of each epoch
 * Add Cpp Extension in  `code/sources/`  for negative sampling. To use the extension, please install `pybind11` and `cppimport` under your environment
