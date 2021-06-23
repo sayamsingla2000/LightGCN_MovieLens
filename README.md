@@ -9,7 +9,7 @@
 * while using ml100k dataset in gowalla type loader class that is loader2 make sure to register it in register.py (already commented) 
 * while using ml100k in lastfm type class that ml100k() , again register in register.py 
 * use this command 
-  ` cd code && python main.py --decay=1e-5 --lr=0.0001 --layer=4 --seed=2020 --dataset="gowalla" --topks="[50]" --recdim=32`
+  ` cd code && python main.py --decay=1e-5 --lr=0.0001 --layer=4 --seed=2020 --dataset="ml100k" --topks="[50]" --recdim=32`
   and change name of dataset accordingly under quotes 
 * if you are retraining the model for ml100k dataset make sure to delete "s_pre_adj_mat.npz" file in ml100k folder as it stores the matrix data when using gowalla type loader class.
 
