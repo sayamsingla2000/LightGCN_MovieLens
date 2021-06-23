@@ -80,7 +80,7 @@ class LastFM(BasicDataset):
         self.mode    = self.mode_dict['train']
         # self.n_users = 1892
         # self.m_items = 4489
-        trainData = pd.read_table(join(path, 'data1.txt'), header=None)
+        trainData = pd.read_table(join(path, 'data1txt'), header=None)
         # print(trainData.head())
         testData  = pd.read_table(join(path, 'test1.txt'), header=None)
         # print(testData.head())
@@ -120,11 +120,13 @@ class LastFM(BasicDataset):
 
     @property
     def n_users(self):
-        return 1892
+        # return 1892
+        return 611
     
     @property
     def m_items(self):
-        return 4489
+        # return 4489
+        return 193610 
     
     @property
     def trainDataSize(self):
@@ -473,7 +475,7 @@ class Loader2(BasicDataset):
                     self.n_user = max(self.n_user, uid)
                     self.traindataSize += 1
 
-        print(trainUniqueUsers)
+        # print(trainUniqueUsers)
         self.trainUniqueUsers = np.array(trainUniqueUsers)
         self.trainUser = np.array(trainUser)
         self.trainItem = np.array(trainItem)
@@ -518,7 +520,7 @@ class Loader2(BasicDataset):
         print(f"{world.dataset} Sparsity : {(self.trainDataSize + self.testDataSize) / self.n_users / self.m_items}")
 
         # (users,items), bipartite graph
-        self.UserItemNet = csr_matrix((np.ones(len(self.trainUser)), (self.trainUser, self.trainItem)),
+        self.UserItemNet = csr_matrix((self.trainUser, (self.trainUser, self.trainItem)),
                                       shape=(self.n_user, self.m_item))
         self.users_D = np.array(self.UserItemNet.sum(axis=1)).squeeze()
         self.users_D[self.users_D == 0.] = 1

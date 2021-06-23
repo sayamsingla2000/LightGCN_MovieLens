@@ -26,7 +26,7 @@ def parse_args():
                         help="the batch size for bpr loss training procedure")
     parser.add_argument('--a_fold', type=int,default=100,
                         help="the fold num used to split large adj matrix, like gowalla")
-    parser.add_argument('--testbatch', type=int,default=100,
+    parser.add_argument('--testbatch', type=int,default=17,
                         help="the batch size of users for testing")
     parser.add_argument('--dataset', type=str,default='gowalla',
                         help="available datasets: [lastfm, gowalla, yelp2018, amazon-book]")
@@ -38,7 +38,7 @@ def parse_args():
                         help="enable tensorboard")
     parser.add_argument('--comment', type=str,default="lgn")
     parser.add_argument('--load', type=int,default=0)
-    parser.add_argument('--epochs', type=int,default=25)
+    parser.add_argument('--epochs', type=int,default= 25 )
     parser.add_argument('--multicore', type=int, default=0, help='whether we use multiprocessing or not in test')
     parser.add_argument('--pretrain', type=int, default=0, help='whether we use pretrained weight or not')
     parser.add_argument('--seed', type=int, default=2020, help='random seed')
