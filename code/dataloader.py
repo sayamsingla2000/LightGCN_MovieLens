@@ -7,6 +7,38 @@ Xiangnan He et al. LightGCN: Simplifying and Powering Graph Convolution Network 
 Design Dataset here
 Every dataset's index has to start at 0
 """
+
+"""
+CODE DETAILS
+
+Dataset loader consist of two arrays trainUser and trainItem which contains the ID of user 
+and item and another trainRating for movielens100k dataset which is nothing interaction 
+between user and item like a weighted edge 
+
+like in Loader2() class which is for movielens dataset after loading the dataset it makes a trainUser,
+trainItem and trainRating array this array is used to make (users,items), bipartite graph named UserItemNet 
+(like an adjacency matrix) with dimensions (users x items) and rating be the interaction value (0 and 1 for other loader() class like 
+for gowalla , lastfm and so on since they are not using rating in their model training) 
+
+getUserPosItems() function maints the list of a user to how many items it is connected and whic
+items 
+ 
+_build_test maintains   dict: {user: [items]} used for test results 
+
+getSparseGraph()
+
+And then final task which is to make a sparse graph which is formed in getSparseGraph()
+ which is nothing but of the form adj_mat/A = [0   R  as dicussed in the paper 
+                                               R.T 0] 
+A/ norm_adj = D(^0.5) AD(^-0.5) is the symmetrically normalized matrix or a final graph. 
+where D is a (M+N)×(M+N) diagonal matrix where M and N denote the number of users and items
+
+this graph is used as this so that we could get the final embedding matrix 
+E(^k+1) =(D(^0.5) AD(^-0.5))E 
+
+
+"""
+
 import os
 from os.path import join
 import sys
@@ -80,7 +112,7 @@ class LastFM(BasicDataset):
         self.mode    = self.mode_dict['train']
         # self.n_users = 1892
         # self.m_items = 4489
-        trainData = pd.read_table(join(path, 'data1txt'), header=None)
+        trainData = pd.read_table(join(path, 'data1.txt'), header=None)
         # print(trainData.head())
         testData  = pd.read_table(join(path, 'test1.txt'), header=None)
         # print(testData.head())
@@ -120,13 +152,13 @@ class LastFM(BasicDataset):
 
     @property
     def n_users(self):
-        # return 1892
-        return 611
+        return 1892
+        # return 611
     
     @property
     def m_items(self):
-        # return 4489
-        return 193610 
+        return 4489
+        # return 193610 
     
     @property
     def trainDataSize(self):

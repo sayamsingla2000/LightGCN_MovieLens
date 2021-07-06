@@ -6,6 +6,17 @@ Xiangnan He et al. LightGCN: Simplifying and Powering Graph Convolution Network 
 
 Design training and test process
 '''
+
+"""
+This file contains the 2 imp. function BPR_train_original() and TEST() where former is 
+for training and minimizing the loss and later is for test after certain number of epochs.
+just like i was using for first Test() is ran with no training and then for next 10 epoch 
+BPR_train_original() and then Test and so on. 
+
+and then all of these fns is aligned in main.py for proper training. 
+
+
+"""
 import world
 import numpy as np
 import torch

@@ -4,7 +4,25 @@ Pytorch Implementation of LightGCN in
 Xiangnan He et al. LightGCN: Simplifying and Powering Graph Convolution Network for Recommendation
 
 @author: Jianbai Ye (gusye@mail.ustc.edu.cn)
+
 '''
+
+"""
+This file contains 2 class BPRLoss() and timer() essential for modelling where BPRLoss 
+in UniformSample_original_python() does positive as well as negative sampling 
+
+Then there are this trival function like seed()  , getFileName(), minibatch() which creates
+batch for training as per batchsize given in parse.py, shuffle(). 
+
+Then there is timer() this stores time difference for every specific task 
+
+There are some function for the metrics  i.e recall, precision, NDCG(discounted cummulative gain to measure the 
+ranking quality), MRRatK_r() [mean reciprocal rank] , AUC 
+
+Although here we are using only 2 function i.e RecallPrecision_ATk() and NDCGatK_r() for 
+recall , precision and NDCG as a scoring metric. 
+
+"""
 import world
 import torch
 from torch import nn, optim

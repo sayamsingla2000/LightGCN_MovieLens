@@ -6,12 +6,47 @@ Xiangnan He et al. LightGCN: Simplifying and Powering Graph Convolution Network 
 @author: Jianbai Ye (gusye@mail.ustc.edu.cn)
 
 Define models here
+
+"""
+
+"""
+This file contains all the important function to build the model
+
+There are 2 classes that is PureMF() and LightGCN() where pureMF() is just a lower version of
+LightGCN()
+
+There are 2 intializer in this class in  __init()__ and __init_weight() 
+we are just intializing the parameters and loading the dataset and then 
+and embedding for user and item that is self.embedding_user and self.embedding_item and then 
+intializing it using normal distribution intializer and if we have pretrained then we are loading that only 
+but here we are not provided with pretrained model so we are intializing it everytime.
+
+then there is a function on dropout which applies dropout and then the computer() fn which is 
+propogate method for LightGCN 
+
+E(^k+1) =(D(^0.5) AD(^-0.5))E  as in dataloader.py where
+self.Graph = (D(^0.5) AD(^-0.5))
+
+this goes on as per the number of layer to get the final Embedding Matrix E 
+
+getUserRating() = it Eu.T * Ey to get the final rating.
+
+getEmbedding() = return all the embedding after immediate step 
+
+bpr_loss() = it is a loss fn i.e Bayesian Personalized Ranking (BPR) loss , which is a pairwise loss
+ that encourages the prediction of an observed entry to be higher than its unobserved counterparts
+
+ getEmbedding() fn is used here so that we could get loss at ever instances 
+
+ Then there is a forward fn. 
+
 """
 import world
 import torch
 from dataloader import BasicDataset
 from torch import nn
 import numpy as np
+import pandas as pd
 
 
 class BasicModel(nn.Module):    
@@ -168,9 +203,17 @@ class LightGCN(BasicModel):
                 all_emb = torch.sparse.mm(g_droped, all_emb)
             embs.append(all_emb)
         embs = torch.stack(embs, dim=1)
-        #print(embs.size())
+        # print(embs.size())
         light_out = torch.mean(embs, dim=1)
         users, items = torch.split(light_out, [self.num_users, self.num_items])
+        # print(users.size())
+        # print(items.size())
+        px = pd.DataFrame(users).astype("float")
+        py = pd.DataFrame(items).astype("float")
+        # print(px)
+        px.to_csv('file_user.csv')
+        py.to_csv('file_item.csv')
+
         return users, items
     
     def getUsersRating(self, users):
@@ -178,6 +221,10 @@ class LightGCN(BasicModel):
         users_emb = all_users[users.long()]
         items_emb = all_items
         rating = self.f(torch.matmul(users_emb, items_emb.t()))
+        # print(rating)
+        print(users_emb.shape)
+        print(items_emb.shape)
+        # print(rating.shape)
         return rating
     
     def getEmbedding(self, users, pos_items, neg_items):
