@@ -1,3 +1,6 @@
+#### Docx 
+https://docs.google.com/document/d/1Ee2X4yjXX8eQaLQ8T6nr3z7CDE2E2EPODjCjAtdDCRI/edit?usp=sharing 
+
 #### Code Details 
 * Each python file contains the explaination that how that function/class are working 
 * parse.py , world.py , register.py and main.py are the trival files which contains basic info. like parameter used and locations 
