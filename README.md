@@ -1,3 +1,8 @@
+#### Code Details 
+* Each python file contains the explaination that how that function/class are working 
+* parse.py , world.py , register.py and main.py are the trival files which contains basic info. like parameter used and locations 
+* Order to look the code is dataloader.py -> parse.py -> world.py -> register.py -> model.py -> utils.py -> procedure.py -> main.py
+
 
 #### Update
 
